@@ -1,5 +1,5 @@
 {
-    "name": "smate/flicksearch",
+    "name": "smate/flickrsearch",
     "description": "Flickr Search for laravel",
 	"keywords": ["laravel", "flickr", "search"],
 	"license": "MIT",
