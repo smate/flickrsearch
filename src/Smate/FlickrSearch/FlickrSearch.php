@@ -1,7 +1,9 @@
 <?php 
 namespace Smate\FlickrSearch;
+use Illuminate\Support\ServiceProvider;
 
-class FlickrSearch {
+class FlickrSearch extends ServiceProvider {
+
     
     protected $apiKey;
 
@@ -14,12 +16,16 @@ class FlickrSearch {
     private $defaultTimeOut = 10; //timeout for http request in second
 
 
+    public function register() {
+    }
+
     /**
      * constructor
      * @param String apiKey
      */
     public function __construct($apiKey, $apiSecret = false) {
         $this->apiKey = $apiKey;
+        $this->apiSecret = $apiSecret;
     }
 
     /**
@@ -41,7 +47,7 @@ class FlickrSearch {
         $this->text = $text;
 
         $response = $this->grabResponse($this->buildApiUrl());
-
+        return $response;
     }
 
     /**
@@ -102,5 +108,23 @@ class FlickrSearch {
     }
 
 
-
+    /**
+     * [getImgURL description]
+     * @param  [type]
+     * @param  [type]
+     * @return [type]
+     */
+    public static function getImgURL($imageData, $size = 's') 
+    {
+        if (in_array($size, array('s', 'q', 't', 'm', 'n', '-', 'z', 'c', 'b', 'h', 'k', 'o'))) {
+            if($size != '-') {
+                $size = '_'.$size;                
+            } else {
+                $size = '';
+            }
+        } else {
+            $size = '_s';            
+        }
+        return 'https://farm'.$imageData['farm'].'.staticflickr.com/'.$imageData['server'].'/'.$imageData['id'].'_'.$imageData['secret'].''.$size.'.jpg';
+    }
 }
