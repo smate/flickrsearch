@@ -1,4 +1,5 @@
-<?php namespace Smate\FlickrSearch;
+<?php 
+namespace Smate\FlickrSearch;
 
 class FlickrSearch {
     
