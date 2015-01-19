@@ -57,7 +57,7 @@ class FlickrSearch extends ServiceProvider {
     {
         $this->text = $text;
         $this->license = $license;
-         
+
         $response = $this->grabResponse($this->buildApiUrl());
         return $response;
     }
@@ -116,7 +116,7 @@ class FlickrSearch extends ServiceProvider {
      */
     private function buildApiUrl()
     {
-        return 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key='.$this->apiKey.'&text='.$this->text.'&per_page='.$this->perPage.'&format=php_serial'.($this->license ? ('&license='.intval($license)) : '');
+        return 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key='.$this->apiKey.'&text='.$this->text.'&per_page='.$this->perPage.'&format=php_serial'.($this->license ? ('&license='.intval($this->license)) : '');
     }
 
 
