@@ -15,6 +15,7 @@ class FlickrSearch extends ServiceProvider {
 
     private $defaultTimeOut = 10; //timeout for http request in second
 
+    private $license = false; //limit search to specific photo license
 
     public function register() {
     }
@@ -40,12 +41,23 @@ class FlickrSearch extends ServiceProvider {
     /**
      * 
      * @param  String text
+     * @param  Int license id 
+     *   0 - All Rights Reserved
+     *   1 - Attribution-NonCommercial-ShareAlike License
+     *   2 - Attribution-NonCommercial License
+     *   3 - Attribution-NonCommercial-NoDerivs License
+     *   4 - Attribution License
+     *   5 - Attribution-ShareAlike License
+     *   6 - Attribution-NoDerivs License
+     *   7 - No known copyright restrictions
+     *   8 - United States Government Work
      * @return Array 
      */
-    public function search($text)
+    public function search($text, $license = false)
     {
         $this->text = $text;
-
+        $this->license = $license;
+         
         $response = $this->grabResponse($this->buildApiUrl());
         return $response;
     }
@@ -104,7 +116,7 @@ class FlickrSearch extends ServiceProvider {
      */
     private function buildApiUrl()
     {
-        return 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key='.$this->apiKey.'&text='.$this->text.'&per_page='.$this->perPage.'&format=php_serial';
+        return 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key='.$this->apiKey.'&text='.$this->text.'&per_page='.$this->perPage.'&format=php_serial'.($this->license ? ('&license='.intval($license)) : '');
     }
 
 
