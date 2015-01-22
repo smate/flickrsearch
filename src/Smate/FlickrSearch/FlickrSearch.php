@@ -13,6 +13,8 @@ class FlickrSearch extends ServiceProvider {
 
     public $perPage = 10;
 
+    public $page = 1;
+
     private $defaultTimeOut = 10; //timeout for http request in second
 
     private $license = false; //limit search to specific photo license
@@ -36,6 +38,15 @@ class FlickrSearch extends ServiceProvider {
     public function setPerPage($perPage)
     {
         $this->perPage = intval($perPage);
+    }
+
+    /**
+     * sets page param
+     * @param int $page starting from 1
+     */
+    public function setPage($page) 
+    {
+        $this->page = intval($page);
     }
 
     /**
@@ -100,11 +111,17 @@ class FlickrSearch extends ServiceProvider {
     {
         $processed = array();
 
+        $processed['total'] = intval($response['photos']['total']);
+        $processed['pages'] = intval($response['photos']['pages']);
+
+        $processed['items'] = array(); //items
         if( !empty($response) && $response['stat'] == 'ok' && !empty($response['photos']['photo']) ) {
             foreach ($response['photos']['photo'] as $item) {
-                $processed[] = $item;
+                $processed['items'][] = $item;
             }
         }
+
+
 
         return $processed;
     }
@@ -116,7 +133,7 @@ class FlickrSearch extends ServiceProvider {
      */
     private function buildApiUrl()
     {
-        return 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key='.$this->apiKey.'&text='.$this->text.'&per_page='.$this->perPage.'&format=php_serial'.($this->license ? ('&license='.intval($this->license)) : '');
+        return 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key='.$this->apiKey.'&text='.$this->text.'&page='.$this->page.'&per_page='.$this->perPage.'&format=php_serial'.($this->license ? ('&license='.intval($this->license)) : '');
     }
 
 
