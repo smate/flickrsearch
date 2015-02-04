@@ -66,7 +66,7 @@ class FlickrSearch extends ServiceProvider {
      */
     public function search($text, $license = false)
     {
-        $this->text = $text;
+        $this->text = str_replace(" ", '+', $text);
         $this->license = $license;
 
         $response = $this->grabResponse($this->buildApiUrl());
