@@ -69,8 +69,27 @@ class FlickrSearch extends ServiceProvider {
         $this->text = str_replace(" ", '+', $text);
         $this->license = $license;
 
-        $response = $this->grabResponse($this->buildApiUrl());
+        $response = $this->processResponse($this->grabResponse($this->buildApiUrl()));
         return $response;
+    }
+
+    public function getPhotoInfo($photoID)
+    {
+        $url = 'https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key='.$this->apiKey.'&photo_id='.$photoID.'&format=php_serial';
+        $response = $this->grabResponse($url);
+        
+        //print_r($response);
+        $imageUrl = '';
+        foreach ($response['photo']['urls']['url'] as $value) {
+            if( $value['type'] == 'photopage' ) {
+                $imageUrl = $value['_content'];
+            }
+        }
+
+        $data['author'] = $response['photo']['owner']['username'];
+        $data['imageUrl'] = $imageUrl;
+
+        return $data;
     }
 
     /**
@@ -99,7 +118,7 @@ class FlickrSearch extends ServiceProvider {
             throw new Exception("Error unserilizing data", 1);
         }
 
-        return $this->processResponse($data);
+        return $data;
     }
 
     /**
